@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $scanner = "scripts/privacy-scan.ps1"
 $binaryAllowlist = [ordered]@{
-    "docs/assets/impossible-ocr-header.png" = "c4ad362a50727ee81cad3cf41d75e752cf676bcd1f8a79b5c9653194f4ddf1fb"
+    "docs/assets/impossible-ocr-header.png" = "527a01bd6012b903d71046ffca627b942749a02728e704bba7bd32e7c9af2afe"
 }
 $binaryExtensions = @(
     ".7z", ".a", ".bmp", ".dll", ".dylib", ".exe", ".gif", ".gz", ".ico", ".jpeg",

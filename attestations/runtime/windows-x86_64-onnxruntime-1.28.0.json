@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "kind": "impossible-ocr-runtime-qualification-attestation",
+  "status": "passed",
+  "platform_id": "windows-x86_64",
+  "target_triple": "x86_64-pc-windows-msvc",
+  "profile": "paddlex-ocr-3.7-max960",
+  "ort_crate_version": "2.0.0-rc.13",
+  "qualification_source_sha256": "1317214c446987750b6c28d601fd5d078130ffcf0d5552209b7d3d1a4e7e5af9",
+  "runtime": {
+    "platform_record_sha256": "26756d3aa23b5fc7317326aeec99e72401c97b2fad902447a8b9a2be62fa776e",
+    "identity": {
+      "name": "Microsoft ONNX Runtime",
+      "version": "1.28.0",
+      "source_commit": "da9b5e364c465de65c49d91e696cd6485270757f",
+      "c_api_version": 28,
+      "execution_provider": "cpu",
+      "platform_id": "windows-x86_64",
+      "target_triple": "x86_64-pc-windows-msvc",
+      "archive_bytes": 78796801,
+      "archive_sha256": "abef733dacbe2f571547a7150b479b5cb9cc0df22f96c24983a42cadb1b4f8bc",
+      "required_files": [
+        {
+          "install_name": "onnxruntime.dll",
+          "bytes": 15809848,
+          "sha256": "18370c375f07357fa5874344a9d9ac17e6b6fe1eb18b1dd209d79483b4470257"
+        },
+        {
+          "install_name": "onnxruntime_providers_shared.dll",
+          "bytes": 21856,
+          "sha256": "599629fa643707defe9156140ae5edd73531f221aa97b7585b1c9bb0a93586f8"
+        },
+        {
+          "install_name": "LICENSE.onnxruntime",
+          "bytes": 1094,
+          "sha256": "c250d6278f0b47a6439fb7592b08b58a55eb9f535aa49a1db63211c3f982b674"
+        },
+        {
+          "install_name": "ThirdPartyNotices.onnxruntime.txt",
+          "bytes": 331175,
+          "sha256": "fb0af774b4d7cffc5b9d046f2aaeade2f37df2f80abf8033c95dfffcc77a8866"
+        },
+        {
+          "install_name": "Privacy.onnxruntime.md",
+          "bytes": 2490,
+          "sha256": "bfb7712b075f3f07e3ebee5dc2a296d1de32dbf71ad28663f73d1538cb6c3b08"
+        }
+      ]
+    }
+  },
+  "model_bundle": {
+    "bundle_id": "paddlex-ocr-3.7-max960",
+    "artifacts": [
+      {
+        "role": "detector",
+        "kind": "onnx_graph",
+        "filename": "detector.onnx",
+        "bytes": 4826518,
+        "sha256": "a431985659dc921974177a95adcfbb90fd9e51989a5e04d70d0b75f597b6e61d"
+      },
+      {
+        "role": "detector",
+        "kind": "inference_config",
+        "filename": "detector-inference.yml",
+        "bytes": 903,
+        "sha256": "98069072e1b6b37d727fd9d9f11725faa46d6ea0de012f2ed26caea011c37699"
+      },
+      {
+        "role": "english_recognizer",
+        "kind": "onnx_graph",
+        "filename": "english-recognizer.onnx",
+        "bytes": 7848423,
+        "sha256": "b5f833dfc5d0eb71da397b4efa06ebeee9b431b690a47d6af40d77d8eabc557f"
+      },
+      {
+        "role": "english_recognizer",
+        "kind": "inference_config",
+        "filename": "english-recognizer-inference.yml",
+        "bytes": 3964,
+        "sha256": "27e91d0582f40168aa218303c76e184bc78fa7a5d105aad0cfbad8458b441067"
+      }
+    ],
+    "contracts": [
+      {
+        "role": "detector",
+        "contract_id": "paddlepaddle-pp-ocrv5-mobile-detector-e6f4fa85",
+        "file_sha256": "b6d249893670e6bbc93f0f78b4e7c571bf9c53af65f8cb8c08d8c1b930607619"
+      },
+      {
+        "role": "english_recognizer",
+        "contract_id": "paddlepaddle-pp-ocrv5-english-mobile-recognizer-3fafbc3b",
+        "file_sha256": "52f20919448c39210fab1d23fcb89c839d451f8008f733d5e0202a447c3a247a"
+      }
+    ]
+  },
+  "report": {
+    "schema_version": 1,
+    "status": "passed",
+    "profile": "paddlex-ocr-3.7-max960",
+    "runtime_version": "1.28.0",
+    "warmup": true,
+    "detector_probes": [
+      {
+        "width": 32,
+        "height": 32,
+        "shape_valid": true,
+        "probability_invariants": true,
+        "deterministic": true
+      },
+      {
+        "width": 320,
+        "height": 960,
+        "shape_valid": true,
+        "probability_invariants": true,
+        "deterministic": true
+      },
+      {
+        "width": 960,
+        "height": 320,
+        "shape_valid": true,
+        "probability_invariants": true,
+        "deterministic": true
+      },
+      {
+        "width": 960,
+        "height": 960,
+        "shape_valid": true,
+        "probability_invariants": true,
+        "deterministic": true
+      }
+    ],
+    "recognizer_probes": [
+      {
+        "batch": 1,
+        "requested_width": 160,
+        "admitted_width": null,
+        "probability_invariants": false,
+        "deterministic": false
+      },
+      {
+        "batch": 1,
+        "requested_width": 320,
+        "admitted_width": 320,
+        "probability_invariants": true,
+        "deterministic": true
+      },
+      {
+        "batch": 1,
+        "requested_width": 3200,
+        "admitted_width": 3200,
+        "probability_invariants": true,
+        "deterministic": true
+      },
+      {
+        "batch": 8,
+        "requested_width": 160,
+        "admitted_width": null,
+        "probability_invariants": false,
+        "deterministic": false
+      },
+      {
+        "batch": 8,
+        "requested_width": 320,
+        "admitted_width": 320,
+        "probability_invariants": true,
+        "deterministic": true
+      },
+      {
+        "batch": 8,
+        "requested_width": 3200,
+        "admitted_width": 3200,
+        "probability_invariants": true,
+        "deterministic": true
+      }
+    ],
+    "end_to_end": {
+      "generated_png": true,
+      "valid_result": true,
+      "deterministic": true
+    }
+  }
+}

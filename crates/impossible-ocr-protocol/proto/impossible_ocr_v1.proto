@@ -1,0 +1,35 @@
+syntax = "proto3";
+package impossible.ocr.v1;
+
+service OcrService {
+  rpc Recognize(RecognizeRequest) returns (RecognizeResponse);
+  rpc RecognizeBatch(RecognizeBatchRequest) returns (RecognizeBatchResponse);
+  rpc GetCapabilities(GetCapabilitiesRequest) returns (CapabilitiesResponse);
+}
+
+enum RasterFormat { UNSPECIFIED = 0; PNG = 1; JPEG = 2; }
+message InputMetadata { RasterFormat format = 1; uint64 encoded_bytes = 2; uint32 width = 3; uint32 height = 4; }
+message OcrOptions { bool include_words = 1; float minimum_confidence = 2; string language = 3; }
+message RecognizeRequest { bytes image = 1; InputMetadata metadata = 2; OcrOptions options = 3; }
+message RecognizeBatchRequest { repeated RecognizeRequest items = 1; }
+message Point { float x = 1; float y = 2; }
+message Polygon { repeated Point points = 1; }
+message Word { string text = 1; float confidence = 2; Polygon polygon = 3; }
+message Line { string text = 1; float confidence = 2; Polygon polygon = 3; repeated Word words = 4; }
+message Block { Polygon polygon = 1; repeated Line lines = 2; }
+message Page { uint32 index = 1; uint32 width = 2; uint32 height = 3; repeated Block blocks = 4; }
+message OcrResult { repeated Page pages = 1; }
+message RecognizeResponse { OcrResult result = 1; uint64 request_id = 2; }
+message RecognizeBatchResponse { repeated OcrResult results = 1; uint64 request_id = 2; }
+message GetCapabilitiesRequest {}
+message CapabilitiesResponse {
+  string api_version = 1;
+  repeated string raster_formats = 2;
+  uint32 max_batch_items = 3;
+  bool supports_pdf = 4;
+  bool supports_jobs = 5;
+  bool supports_websocket = 6;
+  uint64 max_image_bytes = 7;
+  uint64 max_batch_image_bytes = 8;
+  uint64 max_grpc_wire_bytes = 9;
+}

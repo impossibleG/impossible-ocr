@@ -1,0 +1,137 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Impossible OCR native ONNX Runtime manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "runtime", "release", "networkPolicy", "platforms"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "sourceCommit", "cApiVersion", "executionProvider", "license"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "sourceCommit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "cApiVersion": { "type": "integer", "minimum": 1 },
+        "executionProvider": { "type": "string", "minLength": 1 },
+        "license": { "type": "string", "minLength": 1 }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "releaseId", "metadataUrl", "immutable"],
+      "properties": {
+        "repository": { "type": "string", "pattern": "^https://" },
+        "releaseId": { "type": "integer", "minimum": 1 },
+        "metadataUrl": { "type": "string", "pattern": "^https://" },
+        "immutable": { "type": "boolean" }
+      }
+    },
+    "networkPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowedHosts", "maximumRedirects", "connectTimeoutSeconds", "idleReadTimeoutSeconds"],
+      "properties": {
+        "allowedHosts": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[A-Za-z0-9.-]+$" }
+        },
+        "maximumRedirects": { "type": "integer", "minimum": 0 },
+        "connectTimeoutSeconds": { "type": "integer", "minimum": 1 },
+        "idleReadTimeoutSeconds": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "platforms": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/definitions/platform" }
+    }
+  },
+  "definitions": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "safeRelative": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*[\\\\:\\u0000])[^/]+(?:/[^/]+)*$"
+    },
+    "platform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "targetTriple", "archive", "requiredFiles", "allowedMemberRules"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9_]+)+$" },
+        "targetTriple": { "type": "string", "minLength": 1 },
+        "archive": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["format", "url", "assetId", "bytes", "sha256", "rootDirectory", "maximumExpandedBytes", "maximumMembers"],
+          "properties": {
+            "format": { "enum": ["zip", "tgz"] },
+            "url": { "type": "string", "pattern": "^https://" },
+            "assetId": { "type": "integer", "minimum": 1 },
+            "bytes": { "type": "integer", "minimum": 1 },
+            "sha256": { "$ref": "#/definitions/sha256" },
+            "rootDirectory": { "$ref": "#/definitions/safeRelative" },
+            "maximumExpandedBytes": { "type": "integer", "minimum": 1 },
+            "maximumMembers": { "type": "integer", "minimum": 1 }
+          }
+        },
+        "requiredFiles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["member", "installName", "bytes", "sha256"],
+            "properties": {
+              "member": { "$ref": "#/definitions/safeRelative" },
+              "installName": { "$ref": "#/definitions/safeRelative" },
+              "bytes": { "type": ["integer", "null"], "minimum": 1 },
+              "sha256": { "anyOf": [{ "$ref": "#/definitions/sha256" }, { "type": "null" }] }
+            }
+          }
+        },
+        "allowedMemberRules": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rootFiles", "includeExtensions", "libFiles"],
+          "properties": {
+            "rootFiles": { "$ref": "#/definitions/safeRelativeArray" },
+            "includeExtensions": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string", "pattern": "^\\.[A-Za-z0-9]+$" }
+            },
+            "libFiles": { "$ref": "#/definitions/safeRelativeArray" },
+            "exactDirectories": { "$ref": "#/definitions/safeRelativeArray" },
+            "exactFiles": { "$ref": "#/definitions/safeRelativeArray" },
+            "ignoredLinks": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["member", "target"],
+                "properties": {
+                  "member": { "$ref": "#/definitions/safeRelative" },
+                  "target": { "type": "string", "pattern": "^[^/\\\\:\\u0000]+$" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "safeRelativeArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/definitions/safeRelative" }
+    }
+  }
+}

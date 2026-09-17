@@ -1,0 +1,20 @@
+[package]
+name = "impossible-ocr-pipeline"
+description = "Backend and pipeline lifecycle boundaries for Impossible OCR"
+publish = false
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+image.workspace = true
+impossible-ocr-domain.workspace = true
+impossible-server-core.workspace = true
+tokio = { workspace = true, features = ["rt"] }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["rt", "time"] }
+
+[lints]
+workspace = true

@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "source": "impossible-server-source-snapshot",
+  "foundation_api_version": "0.1.0",
+  "provisional": true,
+  "vendor_path": "vendor/impossible-server",
+  "expected_source_tree_sha256": "4393c80ec741d15a1a972c182eac617d9f442554cae663ada1f39939dc6c66fa",
+  "manifest_path": "vendor/impossible-server/source-sync.json"
+}
+

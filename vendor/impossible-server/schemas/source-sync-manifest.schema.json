@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/impossibleG/impossible-server/schemas/source-sync-manifest.schema.json",
+  "title": "Impossible Server source sync manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "product",
+    "foundation_api_version",
+    "provisional",
+    "provisional_source_tree_sha256",
+    "license",
+    "files"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "product": { "const": "impossible-server-source-snapshot" },
+    "foundation_api_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"
+    },
+    "provisional": { "type": "boolean" },
+    "provisional_source_tree_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expression", "files"],
+      "properties": {
+        "expression": { "const": "MIT OR Apache-2.0" },
+        "files": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256"],
+            "properties": {
+              "path": { "enum": ["LICENSE-APACHE", "LICENSE-MIT"] },
+              "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+            }
+          }
+        }
+      }
+    },
+    "files": {
+      "type": "array",
+      "minItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "size"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[^\\u0000]+$"
+          },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "size": { "type": "integer", "minimum": 0 }
+        }
+      }
+    }
+  }
+}

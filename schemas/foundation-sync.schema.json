@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://impossible.invalid/schemas/foundation-sync.schema.json",
+  "title": "Impossible Server foundation sync reference",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "source",
+    "foundation_api_version",
+    "provisional",
+    "vendor_path",
+    "expected_source_tree_sha256",
+    "manifest_path"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "source": { "const": "impossible-server-source-snapshot" },
+    "foundation_api_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "provisional": { "const": true },
+    "vendor_path": { "const": "vendor/impossible-server" },
+    "expected_source_tree_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "manifest_path": { "const": "vendor/impossible-server/source-sync.json" }
+  }
+}
+

@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "contract_id": "paddlepaddle-pp-ocrv5-mobile-detector-e6f4fa85",
+  "role": "detector",
+  "qualification": "qualified",
+  "artifact_sha256": "a431985659dc921974177a95adcfbb90fd9e51989a5e04d70d0b75f597b6e61d",
+  "artifact_byte_length": 4826518,
+  "ir_version": 6,
+  "opsets": [
+    {
+      "domain": "",
+      "version": 11
+    }
+  ],
+  "inputs": [
+    {
+      "name": "x",
+      "element_type": 1,
+      "dimensions": [
+        "DynamicDimension.0",
+        3,
+        "DynamicDimension.1",
+        "DynamicDimension.2"
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "name": "fetch_name_0",
+      "element_type": 1,
+      "dimensions": [
+        "ConvTranspose_521_o0__d0",
+        "ConvTranspose_521_o0__d1",
+        "ConvTranspose_521_o0__d2",
+        "ConvTranspose_521_o0__d3"
+      ]
+    }
+  ],
+  "operators": [
+    {
+      "domain": "",
+      "op_type": "Add",
+      "count": 117
+    },
+    {
+      "domain": "",
+      "op_type": "BatchNormalization",
+      "count": 3
+    },
+    {
+      "domain": "",
+      "op_type": "Concat",
+      "count": 1
+    },
+    {
+      "domain": "",
+      "op_type": "Conv",
+      "count": 62
+    },
+    {
+      "domain": "",
+      "op_type": "ConvTranspose",
+      "count": 2
+    },
+    {
+      "domain": "",
+      "op_type": "GlobalAveragePool",
+      "count": 10
+    },
+    {
+      "domain": "",
+      "op_type": "HardSigmoid",
+      "count": 34
+    },
+    {
+      "domain": "",
+      "op_type": "Identity",
+      "count": 192
+    },
+    {
+      "domain": "",
+      "op_type": "Mul",
+      "count": 86
+    },
+    {
+      "domain": "",
+      "op_type": "Relu",
+      "count": 12
+    },
+    {
+      "domain": "",
+      "op_type": "Resize",
+      "count": 6
+    },
+    {
+      "domain": "",
+      "op_type": "Sigmoid",
+      "count": 1
+    }
+  ]
+}

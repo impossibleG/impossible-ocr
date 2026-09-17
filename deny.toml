@@ -1,0 +1,48 @@
+[graph]
+targets = [
+    "x86_64-unknown-linux-gnu",
+    "x86_64-pc-windows-msvc",
+]
+all-features = true
+
+[advisories]
+version = 2
+ignore = []
+
+[licenses]
+confidence-threshold = 0.93
+include-dev = true
+allow = [
+    "Apache-2.0",
+    "BSD-3-Clause",
+    # rustls uses ISC-licensed cryptographic and certificate-validation components.
+    "ISC",
+    "MIT",
+    "Unicode-3.0",
+    # foldhash, used by the protobuf build graph, is distributed under Zlib.
+    "Zlib",
+    # The Mozilla root-certificate data consumed by webpki-roots uses this permissive license.
+    "CDLA-Permissive-2.0",
+]
+exceptions = []
+
+[bans]
+multiple-versions = "deny"
+wildcards = "deny"
+highlight = "all"
+deny = []
+skip = [
+    # png 0.17 requires the legacy bitflags API; no compatible single-version resolution exists.
+    { name = "bitflags", version = "=1.3.2" },
+    # ring 0.17 requires getrandom 0.2 while the reviewed build/test graph requires 0.3.
+    { name = "getrandom", version = "=0.2.17" },
+    # async-trait/displaydoc have moved to syn 3 while the remaining proc-macro graph uses syn 2.
+    { name = "syn", version = "=3.0.5" },
+]
+skip-tree = []
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []

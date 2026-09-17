@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "contract_id": "paddlepaddle-pp-ocrv5-english-mobile-recognizer-3fafbc3b",
+  "role": "english_recognizer",
+  "qualification": "qualified",
+  "artifact_sha256": "b5f833dfc5d0eb71da397b4efa06ebeee9b431b690a47d6af40d77d8eabc557f",
+  "artifact_byte_length": 7848423,
+  "ir_version": 3,
+  "opsets": [
+    {
+      "domain": "",
+      "version": 7
+    }
+  ],
+  "inputs": [
+    {
+      "name": "x",
+      "element_type": 1,
+      "dimensions": [
+        "DynamicDimension.0",
+        3,
+        48,
+        "DynamicDimension.1"
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "name": "fetch_name_0",
+      "element_type": 1,
+      "dimensions": [
+        "DynamicDimension.2",
+        "DynamicDimension.3",
+        438
+      ]
+    }
+  ],
+  "operators": [
+    {
+      "domain": "",
+      "op_type": "Add",
+      "count": 114
+    },
+    {
+      "domain": "",
+      "op_type": "AveragePool",
+      "count": 1
+    },
+    {
+      "domain": "",
+      "op_type": "BatchNormalization",
+      "count": 6
+    },
+    {
+      "domain": "",
+      "op_type": "Concat",
+      "count": 3
+    },
+    {
+      "domain": "",
+      "op_type": "Constant",
+      "count": 330
+    },
+    {
+      "domain": "",
+      "op_type": "Conv",
+      "count": 38
+    },
+    {
+      "domain": "",
+      "op_type": "Div",
+      "count": 5
+    },
+    {
+      "domain": "",
+      "op_type": "GlobalAveragePool",
+      "count": 2
+    },
+    {
+      "domain": "",
+      "op_type": "HardSigmoid",
+      "count": 30
+    },
+    {
+      "domain": "",
+      "op_type": "Identity",
+      "count": 245
+    },
+    {
+      "domain": "",
+      "op_type": "MatMul",
+      "count": 13
+    },
+    {
+      "domain": "",
+      "op_type": "Mul",
+      "count": 100
+    },
+    {
+      "domain": "",
+      "op_type": "Pow",
+      "count": 5
+    },
+    {
+      "domain": "",
+      "op_type": "ReduceMean",
+      "count": 10
+    },
+    {
+      "domain": "",
+      "op_type": "Relu",
+      "count": 2
+    },
+    {
+      "domain": "",
+      "op_type": "Reshape",
+      "count": 52
+    },
+    {
+      "domain": "",
+      "op_type": "Shape",
+      "count": 7
+    },
+    {
+      "domain": "",
+      "op_type": "Sigmoid",
+      "count": 7
+    },
+    {
+      "domain": "",
+      "op_type": "Slice",
+      "count": 13
+    },
+    {
+      "domain": "",
+      "op_type": "Softmax",
+      "count": 3
+    },
+    {
+      "domain": "",
+      "op_type": "Sqrt",
+      "count": 5
+    },
+    {
+      "domain": "",
+      "op_type": "Squeeze",
+      "count": 9
+    },
+    {
+      "domain": "",
+      "op_type": "Sub",
+      "count": 5
+    },
+    {
+      "domain": "",
+      "op_type": "Transpose",
+      "count": 9
+    },
+    {
+      "domain": "",
+      "op_type": "Unsqueeze",
+      "count": 5
+    }
+  ]
+}

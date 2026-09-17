@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "runtime": {
+    "name": "Microsoft ONNX Runtime",
+    "version": "1.28.0",
+    "sourceCommit": "da9b5e364c465de65c49d91e696cd6485270757f",
+    "cApiVersion": 28,
+    "executionProvider": "cpu",
+    "license": "MIT"
+  },
+  "release": {
+    "repository": "https://github.com/microsoft/onnxruntime",
+    "releaseId": 359547054,
+    "metadataUrl": "https://api.github.com/repos/microsoft/onnxruntime/releases/tags/v1.28.0",
+    "immutable": false
+  },
+  "networkPolicy": {
+    "allowedHosts": [
+      "github.com",
+      "release-assets.githubusercontent.com",
+      "objects.githubusercontent.com"
+    ],
+    "maximumRedirects": 5,
+    "connectTimeoutSeconds": 20,
+    "idleReadTimeoutSeconds": 30
+  },
+  "platforms": [
+    {
+      "id": "windows-x86_64",
+      "targetTriple": "x86_64-pc-windows-msvc",
+      "archive": {
+        "format": "zip",
+        "url": "https://github.com/microsoft/onnxruntime/releases/download/v1.28.0/onnxruntime-win-x64-1.28.0.zip",
+        "assetId": 489173573,
+        "bytes": 78796801,
+        "sha256": "abef733dacbe2f571547a7150b479b5cb9cc0df22f96c24983a42cadb1b4f8bc",
+        "rootDirectory": "onnxruntime-win-x64-1.28.0",
+        "maximumExpandedBytes": 536870912,
+        "maximumMembers": 256
+      },
+      "requiredFiles": [
+        {
+          "member": "lib/onnxruntime.dll",
+          "installName": "onnxruntime.dll",
+          "bytes": 15809848,
+          "sha256": "18370c375f07357fa5874344a9d9ac17e6b6fe1eb18b1dd209d79483b4470257"
+        },
+        {
+          "member": "lib/onnxruntime_providers_shared.dll",
+          "installName": "onnxruntime_providers_shared.dll",
+          "bytes": 21856,
+          "sha256": "599629fa643707defe9156140ae5edd73531f221aa97b7585b1c9bb0a93586f8"
+        },
+        {
+          "member": "LICENSE",
+          "installName": "LICENSE.onnxruntime",
+          "bytes": 1094,
+          "sha256": "c250d6278f0b47a6439fb7592b08b58a55eb9f535aa49a1db63211c3f982b674"
+        },
+        {
+          "member": "ThirdPartyNotices.txt",
+          "installName": "ThirdPartyNotices.onnxruntime.txt",
+          "bytes": 331175,
+          "sha256": "fb0af774b4d7cffc5b9d046f2aaeade2f37df2f80abf8033c95dfffcc77a8866"
+        },
+        {
+          "member": "Privacy.md",
+          "installName": "Privacy.onnxruntime.md",
+          "bytes": 2490,
+          "sha256": "bfb7712b075f3f07e3ebee5dc2a296d1de32dbf71ad28663f73d1538cb6c3b08"
+        }
+      ],
+      "allowedMemberRules": {
+        "rootFiles": [
+          "GIT_COMMIT_ID",
+          "LICENSE",
+          "Privacy.md",
+          "README.md",
+          "ThirdPartyNotices.txt",
+          "VERSION_NUMBER"
+        ],
+        "includeExtensions": [".h", ".inc"],
+        "libFiles": [
+          "onnxruntime.dll",
+          "onnxruntime.lib",
+          "onnxruntime.pdb",
+          "onnxruntime_providers_shared.dll",
+          "onnxruntime_providers_shared.lib",
+          "onnxruntime_providers_shared.pdb"
+        ]
+      }
+    },
+    {
+      "id": "linux-x86_64",
+      "targetTriple": "x86_64-unknown-linux-gnu",
+      "archive": {
+        "format": "tgz",
+        "url": "https://github.com/microsoft/onnxruntime/releases/download/v1.28.0/onnxruntime-linux-x64-1.28.0.tgz",
+        "assetId": 489174677,
+        "bytes": 9125960,
+        "sha256": "a3e1b79d7bb1bf09696ce675f49e4064e6c81f6202b8225624fff0e93f8d6407",
+        "rootDirectory": "onnxruntime-linux-x64-1.28.0",
+        "maximumExpandedBytes": 268435456,
+        "maximumMembers": 256
+      },
+      "requiredFiles": [
+        {
+          "member": "lib/libonnxruntime.so.1.28.0",
+          "installName": "libonnxruntime.so.1.28.0",
+          "bytes": 24268848,
+          "sha256": "1461ef7cc3d9e49982591721683cc3e3a55580aeca9a5254e7aac47b75ee4bab"
+        },
+        {
+          "member": "lib/libonnxruntime_providers_shared.so",
+          "installName": "libonnxruntime_providers_shared.so",
+          "bytes": 14632,
+          "sha256": "086ec1d5388f64153d9c63470d126693db9a182c8ce236d3a1119068471b8a0d"
+        },
+        {
+          "member": "LICENSE",
+          "installName": "LICENSE.onnxruntime",
+          "bytes": 1073,
+          "sha256": "2f07c72751aed99790b8a4869cf2311df85a860b22ded05fa22803587a48922c"
+        },
+        {
+          "member": "ThirdPartyNotices.txt",
+          "installName": "ThirdPartyNotices.onnxruntime.txt",
+          "bytes": 325054,
+          "sha256": "0e07b95f3a8d6230037707c5c4a2b554d12c4cb67369669ac255635528ffcee2"
+        },
+        {
+          "member": "Privacy.md",
+          "installName": "Privacy.onnxruntime.md",
+          "bytes": 2469,
+          "sha256": "9a15f9fd9d4c7b6dfc35f237f461863f84f8f73cf6189e330818a674d3828871"
+        }
+      ],
+      "allowedMemberRules": {
+        "rootFiles": [
+          "GIT_COMMIT_ID",
+          "LICENSE",
+          "Privacy.md",
+          "README.md",
+          "ThirdPartyNotices.txt",
+          "VERSION_NUMBER"
+        ],
+        "includeExtensions": [".h", ".inc"],
+        "libFiles": [
+          "libonnxruntime.so",
+          "libonnxruntime.so.1",
+          "libonnxruntime.so.1.28.0",
+          "libonnxruntime_providers_shared.so"
+        ],
+        "exactDirectories": [
+          "include/core",
+          "include/core/providers",
+          "lib/cmake",
+          "lib/cmake/onnxruntime",
+          "lib/pkgconfig"
+        ],
+        "exactFiles": [
+          "include/core/providers/custom_op_context.h",
+          "include/core/providers/resource.h",
+          "lib/cmake/onnxruntime/onnxruntimeConfig.cmake",
+          "lib/cmake/onnxruntime/onnxruntimeConfigVersion.cmake",
+          "lib/cmake/onnxruntime/onnxruntimeTargets-release.cmake",
+          "lib/cmake/onnxruntime/onnxruntimeTargets.cmake",
+          "lib/pkgconfig/libonnxruntime.pc"
+        ],
+        "ignoredLinks": [
+          {
+            "member": "lib/libonnxruntime.so",
+            "target": "libonnxruntime.so.1"
+          },
+          {
+            "member": "lib/libonnxruntime.so.1",
+            "target": "libonnxruntime.so.1.28.0"
+          }
+        ]
+      }
+    }
+  ]
+}

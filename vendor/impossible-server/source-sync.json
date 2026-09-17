@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "product": "impossible-server-source-snapshot",
+  "foundation_api_version": "0.1.0",
+  "provisional": true,
+  "provisional_source_tree_sha256": "4393c80ec741d15a1a972c182eac617d9f442554cae663ada1f39939dc6c66fa",
+  "license": {
+    "expression": "MIT OR Apache-2.0",
+    "files": [
+      {
+        "path": "LICENSE-APACHE",
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      {
+        "path": "LICENSE-MIT",
+        "sha256": "0f39dbfd1a2f61e5b4212c61eb4cb33b4e6fa859c67603d60c12c7477dc260a7"
+      }
+    ]
+  },
+  "files": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "c307e56b427045c107b5ab2f2ac7a32e351ab5e5873590d620c05730995643c8",
+      "size": 3273
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "d636cb6dba6aca84a22d7db5424943af77d5143d3fdd98f54ec0acb1dbc53bfa",
+      "size": 663
+    },
+    {
+      "path": "LICENSE-APACHE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "size": 11357
+    },
+    {
+      "path": "LICENSE-MIT",
+      "sha256": "0f39dbfd1a2f61e5b4212c61eb4cb33b4e6fa859c67603d60c12c7477dc260a7",
+      "size": 1140
+    },
+    {
+      "path": "NOTICE.md",
+      "sha256": "fed8fae0849553bc337391485bae16d52973cb5c2b9613d856fe8dae53a24e71",
+      "size": 290
+    },
+    {
+      "path": "crates/impossible-server-core/Cargo.toml",
+      "sha256": "5f67457f6ec0d4cf2ccf57f3ff7a0337d20498fe43dac11a05afbc623f285350",
+      "size": 410
+    },
+    {
+      "path": "crates/impossible-server-core/src/cancellation.rs",
+      "sha256": "fa1b929fe1118b7fd2d7f44e6bad8bb65afaa085579ee78b9d57d6b94b619254",
+      "size": 1563
+    },
+    {
+      "path": "crates/impossible-server-core/src/error.rs",
+      "sha256": "91a3d3555ce761dc780a8b89c86d902e6c9c7f65c457f51360ab99fcc47d7b4e",
+      "size": 6154
+    },
+    {
+      "path": "crates/impossible-server-core/src/health.rs",
+      "sha256": "299cb699e2640fc42b63e61d37b4f8347c3682b0164466fd522cb29b4b72a536",
+      "size": 4560
+    },
+    {
+      "path": "crates/impossible-server-core/src/lib.rs",
+      "sha256": "597af06b2afd9752aba2dbbd0a0c9510da7b7390e6294df0a1ae5cbafdefc018",
+      "size": 571
+    },
+    {
+      "path": "crates/impossible-server-core/src/limits.rs",
+      "sha256": "4318a80a9efcfe52b020543aaf0c1dd9a07fc213e257029a405acc122174d381",
+      "size": 6417
+    },
+    {
+      "path": "crates/impossible-server-core/src/request.rs",
+      "sha256": "c9e6db812070676e8580b440db34715ba1d1847015413cef90117c7c81666327",
+      "size": 5660
+    },
+    {
+      "path": "crates/impossible-server-core/src/shutdown.rs",
+      "sha256": "ed8c20edecd89a9d779e1425c2a43f778948171f7eaa140d5f2fae35865d451f",
+      "size": 8463
+    },
+    {
+      "path": "crates/impossible-server-testkit/Cargo.toml",
+      "sha256": "b68a58171c000d69d7fbfb6811143e61b3dc8f5c2e8c0a30d657315df8794d09",
+      "size": 458
+    },
+    {
+      "path": "crates/impossible-server-testkit/src/lib.rs",
+      "sha256": "9477a962aa53c3786c6aaf3f892de23a18eaf87f3a61a423952cd02b585a5598",
+      "size": 3307
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256": "13b679f78f261fdcb51430911a01d7e2116415c1c55504980e021af0f8ad0fb1",
+      "size": 87
+    },
+    {
+      "path": "schemas/source-sync-manifest.schema.json",
+      "sha256": "2b56dfbcf7024a6c1ea26fd094caf215a25c9d54788e4e0a000a6bd1a791f04a",
+      "size": 2078
+    }
+  ]
+}

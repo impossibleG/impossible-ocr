@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Impossible OCR ONNX model contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_id", "role", "qualification", "artifact_sha256", "artifact_byte_length", "ir_version", "opsets", "inputs", "outputs", "operators"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "contract_id": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "role": { "enum": ["detector", "english_recognizer"] },
+    "qualification": { "enum": ["provisional", "qualified"] },
+    "artifact_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "artifact_byte_length": { "type": "integer", "minimum": 1, "maximum": 16777216 },
+    "ir_version": { "oneOf": [{ "type": "null" }, { "type": "integer", "minimum": 1 }] },
+    "opsets": { "type": "array", "maxItems": 64, "items": { "$ref": "#/$defs/opset" } },
+    "inputs": { "type": "array", "maxItems": 128, "items": { "$ref": "#/$defs/tensor" } },
+    "outputs": { "type": "array", "maxItems": 128, "items": { "$ref": "#/$defs/tensor" } },
+    "operators": { "type": "array", "maxItems": 8192, "items": { "$ref": "#/$defs/operator" } }
+  },
+  "$defs": {
+    "opset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "version"],
+      "properties": {
+        "domain": { "enum": ["", "ai.onnx"] },
+        "version": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "tensor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "element_type", "dimensions"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "element_type": { "oneOf": [{ "type": "null" }, { "type": "integer", "minimum": 1 }] },
+        "dimensions": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "array",
+              "maxItems": 16,
+              "items": {
+                "oneOf": [
+                  { "type": "integer", "minimum": 0, "maximum": 9223372036854775807 },
+                  { "type": "string", "minLength": 1, "maxLength": 4096 }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "qualified_tensor": {
+      "allOf": [
+        { "$ref": "#/$defs/tensor" },
+        {
+          "properties": {
+            "element_type": { "type": "integer", "minimum": 1 },
+            "dimensions": {
+              "type": "array",
+              "maxItems": 16,
+              "items": {
+                "oneOf": [
+                  { "type": "integer", "minimum": 0, "maximum": 9223372036854775807 },
+                  { "type": "string", "minLength": 1, "maxLength": 4096 }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "operator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "op_type", "count"],
+      "properties": {
+        "domain": { "enum": ["", "ai.onnx"] },
+        "op_type": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "count": { "type": "integer", "minimum": 1, "maximum": 8192 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "qualification": { "const": "qualified" } }, "required": ["qualification"] },
+      "then": {
+        "properties": {
+          "ir_version": { "type": "integer", "minimum": 1 },
+          "opsets": { "minItems": 1 },
+          "inputs": { "minItems": 1, "items": { "$ref": "#/$defs/qualified_tensor" } },
+          "outputs": { "minItems": 1, "items": { "$ref": "#/$defs/qualified_tensor" } },
+          "operators": { "minItems": 1 }
+        }
+      }
+    }
+  ]
+}

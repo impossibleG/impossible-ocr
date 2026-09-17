@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: dtolnay/rust-toolchain@077fee5b0788f1a772d4c6ce2814159cd1d6632b # 1.88.0
+        with:
+          toolchain: 1.88.0
+          components: clippy,rustfmt
+      - uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2.8.1
+      - run: cargo fmt --all -- --check
+      - run: cargo check --locked --workspace --all-targets
+      - run: cargo check --locked --workspace --all-targets --all-features
+      - run: cargo clippy --locked --workspace --all-targets -- -D warnings
+      - run: cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+      - run: cargo test --locked --workspace
+      - run: cargo test --locked --workspace --all-targets --all-features
+      - run: cargo doc --locked --workspace --no-deps
+        env:
+          RUSTDOCFLAGS: -D warnings
+      - run: cargo doc --locked --workspace --all-features --no-deps
+        env:
+          RUSTDOCFLAGS: -D warnings
+      - if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/install-onnxruntime.tests.ps1
+      - shell: pwsh
+        run: ./scripts/verify-dependency-policy.ps1
+      - shell: pwsh
+        run: ./scripts/verify-model-contracts.ps1
+      - shell: pwsh
+        run: ./scripts/runtime-qualification-attestation.tests.ps1
+      - shell: pwsh
+        run: ./scripts/verify-runtime-qualification-attestation.ps1
+      - shell: pwsh
+        run: ./scripts/privacy-scan.tests.ps1
+      - shell: pwsh
+        run: ./scripts/privacy-scan.ps1
+      - shell: pwsh
+        run: ./scripts/verify-foundation-snapshot.ps1
+
+  supply-chain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: EmbarkStudios/cargo-deny-action@c3bbe7e4e3f7baeee1a3dd9aec0a3b2aded580fb # v2.1.1
+        with:
+          arguments: --locked --all-features
+          command: check advisories bans licenses sources

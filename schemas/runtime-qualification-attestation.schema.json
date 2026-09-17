@@ -1,0 +1,212 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Impossible OCR real-runtime qualification attestation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "status",
+    "platform_id",
+    "target_triple",
+    "profile",
+    "ort_crate_version",
+    "qualification_source_sha256",
+    "runtime",
+    "model_bundle",
+    "report"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "kind": { "const": "impossible-ocr-runtime-qualification-attestation" },
+    "status": { "const": "passed" },
+    "platform_id": { "const": "windows-x86_64" },
+    "target_triple": { "const": "x86_64-pc-windows-msvc" },
+    "profile": { "const": "paddlex-ocr-3.7-max960" },
+    "ort_crate_version": { "const": "2.0.0-rc.13" },
+    "qualification_source_sha256": { "$ref": "#/definitions/sha256" },
+    "runtime": { "$ref": "#/definitions/runtime_binding" },
+    "model_bundle": { "$ref": "#/definitions/model_binding" },
+    "report": { "$ref": "#/definitions/report" }
+  },
+  "definitions": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "positive_bytes": { "type": "integer", "minimum": 1 },
+    "runtime_file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["install_name", "bytes", "sha256"],
+      "properties": {
+        "install_name": {
+          "enum": [
+            "onnxruntime.dll",
+            "onnxruntime_providers_shared.dll",
+            "LICENSE.onnxruntime",
+            "ThirdPartyNotices.onnxruntime.txt",
+            "Privacy.onnxruntime.md"
+          ]
+        },
+        "bytes": { "$ref": "#/definitions/positive_bytes" },
+        "sha256": { "$ref": "#/definitions/sha256" }
+      }
+    },
+    "runtime_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "source_commit",
+        "c_api_version",
+        "execution_provider",
+        "platform_id",
+        "target_triple",
+        "archive_bytes",
+        "archive_sha256",
+        "required_files"
+      ],
+      "properties": {
+        "name": { "const": "Microsoft ONNX Runtime" },
+        "version": { "const": "1.28.0" },
+        "source_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "c_api_version": { "const": 28 },
+        "execution_provider": { "const": "cpu" },
+        "platform_id": { "const": "windows-x86_64" },
+        "target_triple": { "const": "x86_64-pc-windows-msvc" },
+        "archive_bytes": { "$ref": "#/definitions/positive_bytes" },
+        "archive_sha256": { "$ref": "#/definitions/sha256" },
+        "required_files": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": { "$ref": "#/definitions/runtime_file" }
+        }
+      }
+    },
+    "runtime_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platform_record_sha256", "identity"],
+      "properties": {
+        "platform_record_sha256": { "$ref": "#/definitions/sha256" },
+        "identity": { "$ref": "#/definitions/runtime_identity" }
+      }
+    },
+    "model_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "kind", "filename", "bytes", "sha256"],
+      "properties": {
+        "role": { "enum": ["detector", "english_recognizer"] },
+        "kind": { "enum": ["onnx_graph", "inference_config"] },
+        "filename": {
+          "enum": [
+            "detector.onnx",
+            "detector-inference.yml",
+            "english-recognizer.onnx",
+            "english-recognizer-inference.yml"
+          ]
+        },
+        "bytes": { "$ref": "#/definitions/positive_bytes" },
+        "sha256": { "$ref": "#/definitions/sha256" }
+      }
+    },
+    "model_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "contract_id", "file_sha256"],
+      "properties": {
+        "role": { "enum": ["detector", "english_recognizer"] },
+        "contract_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "file_sha256": { "$ref": "#/definitions/sha256" }
+      }
+    },
+    "model_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bundle_id", "artifacts", "contracts"],
+      "properties": {
+        "bundle_id": { "const": "paddlex-ocr-3.7-max960" },
+        "artifacts": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": { "$ref": "#/definitions/model_artifact" }
+        },
+        "contracts": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "$ref": "#/definitions/model_contract" }
+        }
+      }
+    },
+    "detector_probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "shape_valid", "probability_invariants", "deterministic"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 1, "maximum": 960 },
+        "height": { "type": "integer", "minimum": 1, "maximum": 960 },
+        "shape_valid": { "const": true },
+        "probability_invariants": { "const": true },
+        "deterministic": { "const": true }
+      }
+    },
+    "recognizer_probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["batch", "requested_width", "admitted_width", "probability_invariants", "deterministic"],
+      "properties": {
+        "batch": { "enum": [1, 8] },
+        "requested_width": { "enum": [160, 320, 3200] },
+        "admitted_width": { "type": ["integer", "null"], "minimum": 1, "maximum": 3200 },
+        "probability_invariants": { "type": "boolean" },
+        "deterministic": { "type": "boolean" }
+      }
+    },
+    "report": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "status",
+        "profile",
+        "runtime_version",
+        "warmup",
+        "detector_probes",
+        "recognizer_probes",
+        "end_to_end"
+      ],
+      "properties": {
+        "schema_version": { "const": 1 },
+        "status": { "const": "passed" },
+        "profile": { "const": "paddlex-ocr-3.7-max960" },
+        "runtime_version": { "const": "1.28.0" },
+        "warmup": { "const": true },
+        "detector_probes": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": { "$ref": "#/definitions/detector_probe" }
+        },
+        "recognizer_probes": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": { "$ref": "#/definitions/recognizer_probe" }
+        },
+        "end_to_end": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["generated_png", "valid_result", "deterministic"],
+          "properties": {
+            "generated_png": { "const": true },
+            "valid_result": { "const": true },
+            "deterministic": { "const": true }
+          }
+        }
+      }
+    }
+  }
+}

@@ -13,6 +13,10 @@ false and OCR requests return a stable `unavailable` error unless the optional O
 enabled, its exact local bundle is installed, its integrity-bound native runtime is admitted, and
 every session passes warm-up. This fail-closed behavior is intentional.
 
+<p align="center">
+  <img src="docs/assets/impossible-ocr-scene.png" alt="An eye scanning visual material into structured information" width="100%">
+</p>
+
 ## Workspace
 
 - `impossible-ocr-domain`: validated raster input, options, errors, geometry, and canonical results.

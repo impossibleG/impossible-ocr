@@ -35,6 +35,8 @@ use url::Url;
 const OWNER: &str = ".impossible-ocr-owner.json";
 const LEGACY_LEASE: &str = ".lease";
 const MAX_YAML: u64 = 64 * 1024;
+/// Separate budget for removing a failed stage, which must also run after cancellation or timeout.
+const STAGE_CLEANUP_BUDGET: Duration = Duration::from_secs(30);
 /// Stable identifier of the only curated detector/recognizer bundle.
 pub const CURATED_BUNDLE_ID: &str = "paddlex-ocr-3.7-max960";
 const BUNDLE: &str = CURATED_BUNDLE_ID;
@@ -574,7 +576,7 @@ impl ModelStore {
         }
         .await;
         if result.is_err() {
-            let _ = remove_safe(&stage, cancel, deadline).await;
+            discard_stage(&stage).await;
         }
         result
     }
@@ -628,7 +630,7 @@ impl ModelStore {
         }
         .await;
         if result.is_err() {
-            let _ = remove_safe(&stage, cancel, deadline).await;
+            discard_stage(&stage).await;
         }
         result
     }
@@ -1493,6 +1495,13 @@ fn lock_file(p: &Path) -> Result<std::fs::File, ModelStoreError> {
 fn lock_is_contended(error: &io::Error) -> bool {
     error.kind() == io::ErrorKind::WouldBlock || matches!(error.raw_os_error(), Some(11 | 33 | 35))
 }
+/// Removes a failed stage under its own token and deadline. The operation's token or deadline may be
+/// the reason it failed, and reusing them would skip cleanup and leave partial artifacts behind.
+async fn discard_stage(stage: &Path) {
+    if let Ok(deadline) = operation_deadline(STAGE_CLEANUP_BUDGET) {
+        let _ = remove_safe(stage, &CancellationToken::new(), deadline).await;
+    }
+}
 fn remove_safe<'a>(
     p: &'a Path,
     cancel: &'a CancellationToken,
@@ -1951,6 +1960,38 @@ mod tests {
                 .unwrap_or(false)
         );
         assert!(no_parent(Path::new("safe/../escape")).is_err());
+    }
+
+    #[tokio::test]
+    async fn cancelled_install_removes_its_partial_stage() {
+        let graph = b"slow-graph".to_vec();
+        let detector = detector_yaml();
+        let recognizer = recognizer_yaml();
+        let (base, task) = slow_server(graph.clone()).await;
+        let catalog = test_catalog(&base, &graph, &detector, &recognizer);
+        let temp = TempDir::new().unwrap_or_else(|_| unreachable!());
+        let store = store(&temp, catalog).await;
+        let cancel = CancellationToken::new();
+        let canceller = cancel.clone();
+        let cancelling = tokio::spawn(async move {
+            sleep(Duration::from_millis(100)).await;
+            assert!(canceller.cancel());
+        });
+        assert_eq!(
+            store
+                .install(BUNDLE, &cancel)
+                .await
+                .as_ref()
+                .map_err(ModelStoreError::code),
+            Err(ModelStoreErrorCode::Cancelled)
+        );
+        cancelling.abort();
+        task.abort();
+        assert!(
+            !fs::try_exists(temp.path().join(format!(".{BUNDLE}.staging")))
+                .await
+                .unwrap_or(true)
+        );
     }
 
     #[tokio::test]

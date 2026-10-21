@@ -1699,12 +1699,11 @@ async fn mcp_call<B: OcrBackend>(
     };
     let arguments = call.arguments;
     match call.name.as_str() {
-        mcp::OCR_CAPABILITIES if is_empty_object(&arguments) => {
-            mcp_success(id, json!(capabilities_response(&state)))
+        mcp::OCR_CAPABILITIES | mcp::OCR_MODELS if !is_empty_arguments(&arguments) => {
+            mcp_error(id, -32_602, "invalid params", 0)
         }
-        mcp::OCR_MODELS if is_empty_object(&arguments) => {
-            mcp_success(id, json!(models_response(&state)))
-        }
+        mcp::OCR_CAPABILITIES => mcp_success(id, json!(capabilities_response(&state))),
+        mcp::OCR_MODELS => mcp_success(id, json!(models_response(&state))),
         mcp::OCR_RECOGNIZE => {
             let Ok(request) = serde_json::from_value::<http::OcrRequest>(arguments) else {
                 return mcp_error(id, -32_602, "invalid params", 0);
@@ -1777,8 +1776,9 @@ async fn mcp_call<B: OcrBackend>(
     }
 }
 
-fn is_empty_object(value: &Value) -> bool {
-    value.as_object().is_some_and(serde_json::Map::is_empty)
+/// MCP makes `arguments` optional, so an omitted (null) value counts as no arguments.
+fn is_empty_arguments(value: &Value) -> bool {
+    value.is_null() || value.as_object().is_some_and(serde_json::Map::is_empty)
 }
 
 #[allow(clippy::needless_pass_by_value)] // The helper owns one complete JSON-RPC response boundary.
@@ -2629,6 +2629,42 @@ mod tests {
         );
         let _ = stop.cancel();
         tokio::time::timeout(Duration::from_secs(2), join).await???;
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn mcp_argument_free_tools_accept_omitted_arguments()
+    -> Result<(), Box<dyn std::error::Error>> {
+        let server = test_server();
+        for (params, expected) in [
+            (json!({"name":mcp::OCR_CAPABILITIES}), None),
+            (json!({"name":mcp::OCR_MODELS}), None),
+            (json!({"name":mcp::OCR_CAPABILITIES,"arguments":{}}), None),
+            (
+                json!({"name":mcp::OCR_MODELS,"arguments":{"unexpected":true}}),
+                Some("invalid params"),
+            ),
+            (json!({"name":"ocr_missing"}), Some("unknown tool")),
+        ] {
+            let request = json!({"jsonrpc":"2.0","id":1,"method":"tools/call","params":params});
+            let response = server
+                .router()
+                .oneshot(
+                    Request::post(http::MCP_ROUTE)
+                        .header("content-type", "application/json")
+                        .body(Body::from(serde_json::to_vec(&request)?))?,
+                )
+                .await?;
+            let body: Value =
+                serde_json::from_slice(&response.into_body().collect().await?.to_bytes())?;
+            match expected {
+                None => assert_eq!(body["result"]["isError"], false),
+                Some(message) => {
+                    assert_eq!(body["error"]["code"], -32_602);
+                    assert_eq!(body["error"]["message"], message);
+                }
+            }
+        }
         Ok(())
     }
 

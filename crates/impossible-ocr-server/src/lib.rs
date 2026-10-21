@@ -2215,6 +2215,36 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn partial_json_options_use_defaults_for_omitted_fields()
+    -> Result<(), Box<dyn std::error::Error>> {
+        for (options, expected_words) in [
+            (json!({}), 1),
+            (json!({"include_words": false}), 0),
+            (json!({"minimum_confidence": 0.5}), 1),
+            (json!({"language": "english"}), 1),
+        ] {
+            let mut request = request_json();
+            request["options"] = options;
+            let response = test_server()
+                .router()
+                .oneshot(
+                    Request::post(http::OCR_ROUTE)
+                        .header("content-type", "application/json")
+                        .body(Body::from(serde_json::to_vec(&request)?))?,
+                )
+                .await?;
+            assert_eq!(response.status(), StatusCode::OK);
+            let body: Value =
+                serde_json::from_slice(&response.into_body().collect().await?.to_bytes())?;
+            let words = body["result"]["pages"][0]["blocks"][0]["lines"][0]["words"]
+                .as_array()
+                .map(Vec::len);
+            assert_eq!(words, Some(expected_words));
+        }
+        Ok(())
+    }
+
+    #[tokio::test]
     async fn malformed_oversized_and_poisoned_batches_fail_before_backend()
     -> Result<(), Box<dyn std::error::Error>> {
         let bad = json!({"items":[request_json(),{"image_base64":"not-base64","metadata":{"format":"png","encoded_bytes":1,"width":1,"height":1}}]});

@@ -294,7 +294,10 @@ pub enum OcrLanguage {
 }
 
 /// Caller-controlled OCR behavior within the v0.1 contract.
+///
+/// Every field is optional on the wire; omitted fields take their [`Default`] values.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(default)]
 pub struct OcrOptions {
     /// Requested language contract.
     pub language: OcrLanguage,
